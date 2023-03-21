@@ -9,6 +9,7 @@ REVMETER_COUNT = 28
 TURBOMETER_COUNT = 9
 RPM_COUNT = 8
 ORDERED_OBJ_COUNT = 99
+DEBUG=False
 
 class LineType(Enum):
     X = 0,
@@ -350,6 +351,22 @@ class RBR_DASH():
             line = line.split(';', 1)[0].strip()
         number = float(line)
         return number
+    
+    def ScaleX(self, value):
+        for obj in self.obj_array_ordered:
+            if type(obj[0]) is Alpha:
+                continue
+            obj[0].Position.x = obj[0].Position.x * value
+    
+    def ScaleY(self, value):
+        for obj in self.obj_array_ordered:
+            if type(obj[0]) is Alpha:
+                continue
+            obj[0].Position.y = obj[0].Position.y * value    
+    
+    def ScaleXY(self, value):
+            self.ScaleX(value)
+            self.ScaleY(value)
 
     def Output_Dash(self, file):
         if file == "":
@@ -361,17 +378,21 @@ class RBR_DASH():
         for obj in self.obj_array_ordered:
             match obj[1]:
                 case LineType.X:
-                    f.write("; " + obj[0].name + " X" + "\n")
+                    if DEBUG:
+                        f.write("; " + obj[0].name + " X" + "\n")
                     f.write(str(obj[0].Position.x) + "\n")
                 case LineType.Y:
-                    f.write("; " + obj[0].name + " Y" + "\n")
+                    if DEBUG:
+                        f.write("; " + obj[0].name + " Y" + "\n")
                     f.write(str(obj[0].Position.y) + "\n")
                 case LineType.XY:
-                    f.write("; " + obj[0].name + " XY" + "\n")
+                    if DEBUG:
+                        f.write("; " + obj[0].name + " XY" + "\n")
                     f.write(str(obj[0].Position.x) + " " +
                             str(obj[0].Position.y) + "\n")
                 case LineType.ALPHA:
-                    f.write("; " + obj[0].name + " Alpha" + "\n")
+                    if DEBUG:
+                        f.write("; " + obj[0].name + " Alpha" + "\n")
                     f.write(str(obj[0].Alpha) + "\n")
                 case _:
                     print("Unknown line type")
