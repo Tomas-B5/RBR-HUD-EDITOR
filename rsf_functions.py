@@ -5,11 +5,15 @@ def check_file_exists(file):
     return os.path.isfile(file)
 
 class CFG_RBR:
+    ScreenX = 0
     ScreenY = 0
     dash_file = ""
     
-    def get_dash_file_by_res(self, yRes):
-        reso43AspectRatio=(4 / 3 * yRes)
+    def get_dash_file_by_res(self, xRes, yRes):
+        aspect=xRes / yRes
+        if aspect > 4/3:
+            aspect=4/3
+        reso43AspectRatio=(aspect * yRes)
         if(reso43AspectRatio < 800):
             return "DIGIDASH_640.ini"
         elif(reso43AspectRatio < 1024):
@@ -27,10 +31,12 @@ class CFG_RBR:
             print("Config file not found")
             exit(1)
         config.read(rbr_dir  + "RichardBurnsRally.ini")
+        self.ScreenX = config.getint('Settings', 'XRes')
         self.ScreenY = config.getint('Settings', 'YRes')
         print("Y res:" + str(self.ScreenY))
+        print("X res:" + str(self.ScreenX))
         
-        self.dash_file = rbr_dir + "misc\\" + self.get_dash_file_by_res(self.ScreenY)
+        self.dash_file = rbr_dir + "misc\\" + self.get_dash_file_by_res(self.ScreenX, self.ScreenY)
         if (check_file_exists(self.dash_file) == False):
             print("dash file not found")
             exit(1)
