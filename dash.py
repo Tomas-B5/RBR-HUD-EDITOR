@@ -3,6 +3,8 @@ import os
 import math
 from Point import *
 from debug import dbg
+import fnmatch
+from dash_object import *
 
 GEAR_COUNT = 9
 REVMETER_COUNT = 28
@@ -16,88 +18,6 @@ class LineType(Enum):
     Y = 1,
     XY = 2,
     ALPHA = 3
-
-class Dash_Object():
-    name = ""
-    hide = False
-
-    def __init__(self, name):
-        self.name = name
-        
-    def __str__(self):
-        return self.name
-
-    def Up(self, step):
-        return 0
-
-    def Down(self, step):
-        return 0
-
-    def Left(self, step):
-        return 0
-
-    def Right(self, step):
-        return 0
-
-
-class Group(Dash_Object):
-    children = 0
-    
-    def __init__(self, name):
-        self.name = name
-        #If its declared in the class it is shared with all instances of the class -_-
-        self.children = {}
-
-    def Up(self, step):
-        for o in self.children:
-            self.children[o].Up(step)
-
-    def Down(self, step):
-        for o in self.children:
-            self.children[o].Down(step)
-
-    def Left(self, step):
-        for o in self.children:
-            self.children[o].Left(step)
-
-    def Right(self, step):
-        for o in self.children:
-            self.children[o].Right(step)
-
-
-class Simple(Dash_Object):
-    Position = Point2D(-1000, -1000)
-    # Limit_min = -9999
-    # Limit_Max = 9999
-
-    def __init__(self, name, pos):
-        self.name = name
-        self.Position = pos
-
-    def Up(self, step):
-        self.Position.y -= step
-        return 0
-
-    def Down(self, step):
-        self.Position.y += step
-        return 0
-
-    def Left(self, step):
-        self.Position.x -= step
-        return 0
-
-    def Right(self, step):
-        self.Position.x += step
-        return 0
-
-
-class Alpha(Dash_Object):
-    Alpha = 1.0
-
-    def __init__(self, name, alpha):
-        self.name = name
-        self.Alpha = alpha
-
 
 class RBR_DASH():
     # Array of all objects for drawing/etc
@@ -279,43 +199,23 @@ class RBR_DASH():
                 continue
 
             dbg("Line: " + line)
-
-            match self.obj_array_ordered[index][1]:
-                case LineType.X:
-                    self.obj_array_ordered[index][0].Position.x = self.Read_X(
-                        line)
-                    dbg("Position: ")
-                    dbg(self.obj_array_ordered[index][0].Position.x)
-                    dbg(self.obj_array_ordered[index][0].Position.y)
-                case LineType.Y:
-                    self.obj_array_ordered[index][0].Position.y = self.Read_Y(
-                        line)
-                    dbg("Position: ")
-                    dbg(self.obj_array_ordered[index][0].Position.x)
-                    dbg(self.obj_array_ordered[index][0].Position.y)
-                case LineType.XY:
-                    self.obj_array_ordered[index][0].Position = self.Read_XY(
-                        line)
-                    dbg("Position: ")
-                    dbg(self.obj_array_ordered[index][0].Position.x)
-                    dbg(self.obj_array_ordered[index][0].Position.y)
-                case LineType.ALPHA:
-                    self.obj_array_ordered[index][0].Alpha = self.Read_Alpha(
-                        line)
-                    dbg("Alpha: ")
-                    dbg(self.obj_array_ordered[index][0].Alpha)
-                case _:
-                    print("Unknown line type")
-                    exit(1)
+            
+            obj = self.obj_array_ordered[index][0]
+            linetype = self.obj_array_ordered[index][1]
+            self.Read_Line(obj, line, linetype)
+            if (type(obj) is Simple):
+                dbg("Position: ")
+                dbg(obj.Position.x)
+                dbg(obj.Position.y)
             index += 1
 
         if (index != ORDERED_OBJ_COUNT):
             print("ERROR: malformed cfg file?")
             print("index: " + str(index) +
                   " expected: " + str(ORDERED_OBJ_COUNT))
-            exit(1)
+            return False
 
-    def Read_XY(self, line):
+    def Read_XY(self, obj: Simple, line):
         if line[0] == 'x':
             line = line[1:]
         # Remove comment
@@ -323,34 +223,36 @@ class RBR_DASH():
             line = line.split(';', 1)[0].strip()
         # Extract numbers
         numbers = line.split()
-        x_number = float(numbers[0])
-        y_number = float(numbers[1])
-        return Point2D(x_number, y_number)
-
-    def Read_X(self, line):
-        if line[0] == 'x':
-            line = line[1:]
-        if ';' in line:
-            # split on the first ';' and take the first part, then remove leading/trailing whitespace
-            line = line.split(';', 1)[0].strip()
-        number = float(line)
-        return number
-
-    def Read_Y(self, line):
-        if line[0] == 'y':
-            line = line[1:]
-        if ';' in line:
-            # split on the first ';' and take the first part, then remove leading/trailing whitespace
-            line = line.split(';', 1)[0].strip()
-        number = float(line)
-        return number
-
-    def Read_Alpha(self, line):
-        if ';' in line:
-            # split on the first ';' and take the first part, then remove leading/trailing whitespace
-            line = line.split(';', 1)[0].strip()
-        number = float(line)
-        return number
+        obj.Position.x = float(numbers[0])
+        obj.Position.y = float(numbers[1])
+        print("comment: ")
+        
+    def Parse_group(self, obj: Simple, line):
+        comment = line.strip()
+        if "[" in comment and "]" in comment:
+            return int(comment[comment.find("[")+1:comment.find("]")])
+        return 0
+        
+    def Read_Line(self, obj: Dash_Object, line, type:LineType):
+        line = line.strip()
+        numbers = line.split(";")
+        print(numbers)
+        if len(numbers) > 1:
+            obj.group = self.Parse_group(obj, numbers[1])
+        match type:
+                case LineType.X:
+                    obj.Position.x = float(numbers[0])
+                case LineType.Y:
+                    obj.Position.y = float(numbers[0])
+                case LineType.XY:
+                    numbers = numbers[0].split()
+                    obj.Position.x = float(numbers[0])
+                    obj.Position.y = float(numbers[1])
+                case LineType.ALPHA:
+                    obj.Alpha = float(numbers[0])
+                case _:
+                    print("Unknown line type")
+                    exit(1)        
     
     def ScaleX(self, value):
         for obj in self.obj_array_ordered:
@@ -367,6 +269,16 @@ class RBR_DASH():
     def ScaleXY(self, value):
             self.ScaleX(value)
             self.ScaleY(value)
+            
+    def converto_to_full(self, value):
+        return
+    
+    def GetGroup(self, group):
+        list = []
+        for obj in self.obj_array_ordered:
+            if obj[0].group == group:
+                list.append(obj[0])
+        return list      
 
     def Output_Dash(self, file):
         if file == "":
@@ -378,26 +290,44 @@ class RBR_DASH():
         for obj in self.obj_array_ordered:
             match obj[1]:
                 case LineType.X:
-                    if DEBUG:
-                        f.write("; " + obj[0].name + " X" + "\n")
-                    f.write(str(obj[0].Position.x) + "\n")
+                    if obj[0].hide:
+                        f.write(str(9999))
+                    else:
+                        f.write("%.2f" % obj[0].Position.x)
                 case LineType.Y:
-                    if DEBUG:
-                        f.write("; " + obj[0].name + " Y" + "\n")
-                    f.write(str(obj[0].Position.y) + "\n")
+                    if obj[0].hide:
+                        f.write(str(9999))
+                    else:
+                        f.write("%.2f" % obj[0].Position.y)
                 case LineType.XY:
-                    if DEBUG:
-                        f.write("; " + obj[0].name + " XY" + "\n")
-                    f.write(str(obj[0].Position.x) + " " +
-                            str(obj[0].Position.y) + "\n")
+                    if obj[0].hide:
+                        f.write(str(9999) + " " + str(9999))
+                    else:
+                        f.write("%.2f" % obj[0].Position.x + " " +
+                           "%.2f" % obj[0].Position.y)
                 case LineType.ALPHA:
-                    if DEBUG:
-                        f.write("; " + obj[0].name + " Alpha" + "\n")
-                    f.write(str(obj[0].Alpha) + "\n")
+                    f.write("%.2f" % obj[0].Alpha)
                 case _:
                     print("Unknown line type")
                     exit(1)
+            if (obj[0].group != 0):
+                f.write(" ; [" + str(obj[0].group) +"]")
+            f.write("\n")
+        
         f.write("$")
         f.close()
         return True
+    
+    def DeleteGroup(self, group):
+        for obj in self.obj_array_ordered:
+            if obj[0].group == group:
+                obj[0].group = 0
+    
+    def HideAll(self):
+        for obj in self.obj_array_ordered:
+            obj[0].hide = True
+            
+    def ShowAll(self):
+        for obj in self.obj_array_ordered:
+            obj[0].hide = False
  
