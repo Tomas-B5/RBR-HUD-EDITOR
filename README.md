@@ -6,7 +6,7 @@ Visual RBR HUD(Digidash) editor. Made for Richard Burns Rally RallySimFans mod.
 # Warning:
 - When you select any dashboard in RSF launcher contents in "RBR/generic/" and "RBR/misc/" folders will get overwritten. 
 - I recommend creating a dashboard following the format of dashboards in "RBR/rsf_launcer/dashboards/**some_dashboard**"
-- You can also use my **template(LINK NEEDED)**. It has a much better layout and is much easier to edit.
+- You can also use my **template(https://github.com/Tomas-B5/RBR-Digidash-modified-template)**. It has a much better layout and is much easier to edit.
 
 # How to run:
 - `pip install -r requirements.txt`
