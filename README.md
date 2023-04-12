@@ -27,7 +27,7 @@ Visual RBR HUD(Digidash) editor. Made for Richard Burns Rally RallySimFans mod.
 - After you are done make a copy and rename it "digidash.ini"
 - Launch your game in 1440p or 4k res.
 - Fix your dash(Usually multiplying all coords by 0.5, then multiplying all by 0.99 till it looks works decently enough, usually some manual touchups are required to finish it)
-- Now you have two files **digidash_1280.ini** - works with 1080p 1280x960 and **digidash.ini** - works with 1440p, 4K and higher.
+- Now you have two files **digidash_1280.ini** which works with 1080p, 1280x960(For VR I hope) resolutions, and **digidash.ini** - works with 1440p, 4K and higher.
 
 # Bugs 
 - If your dashboard has non standard or non full structued(disabled) you will probably crash when trying to open it.
