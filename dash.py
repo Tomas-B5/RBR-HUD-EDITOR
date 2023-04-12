@@ -44,7 +44,7 @@ class RBR_DASH():
 
     Group_REV = Group(">Revmeter")
     for i in range(REVMETER_COUNT, 0, -1):
-        Group_REV.children["REV_" + str(i)] = (Simple("REV_" + str(i), Point2D(0, 0)))
+        Group_REV.children["RPM_" + str(i)] = (Simple("RPM_" + str(i), Point2D(0, 0)))
     obj_array_grouped.append(Group_REV)
 
     Group_turbo = Group(">Turbo(might be in reverse)")
@@ -54,35 +54,35 @@ class RBR_DASH():
 
     Group_numbers = Group(">Numbers")
     Group_numbers.children["Speedo"] = (Simple("Speedo", Point2D(0, 0)))
-    Group_numbers.children["Dist1"] = (Simple("Dist1", Point2D(0, 0)))
-    Group_numbers.children["Dist2"] = (Simple("Dist2", Point2D(0, 0)))
+    Group_numbers.children["Distance1"] = (Simple("Distance1", Point2D(0, 0)))
+    Group_numbers.children["Distance2"] = (Simple("Distance2", Point2D(0, 0)))
     Group_numbers.children["EngineTemp"] = (
         Simple("EngineTemp", Point2D(0, 0)))
     obj_array_grouped.append(Group_numbers)
 
     Group_lights = Group(">Lights(add names)")
-    Group_lights.children["LIGHT_1"] = (Simple("LIGHT_1", Point2D(0, 0)))
-    Group_lights.children["LIGHT_2"] = (Simple("LIGHT_2", Point2D(0, 0)))
-    Group_lights.children["LIGHT_3"] = (Simple("LIGHT_3", Point2D(0, 0)))
-    Group_lights.children["LIGHT_4"] = (Simple("LIGHT_4", Point2D(0, 0)))
-    Group_lights.children["LIGHT_5"] = (Simple("LIGHT_5", Point2D(0, 0)))
-    Group_lights.children["LIGHT_6"] = (Simple("LIGHT_6", Point2D(0, 0)))
+    Group_lights.children["Light_Temp"] = (Simple("Light_Temp", Point2D(0, 0)))
+    Group_lights.children["Light_Brakes"] = (Simple("Light_Brakes", Point2D(0, 0)))
+    Group_lights.children["Light_Oil"] = (Simple("Light_Oil", Point2D(0, 0)))
+    Group_lights.children["Light_Battery"] = (Simple("Light_Battery", Point2D(0, 0)))
+    Group_lights.children["Light_Engine"] = (Simple("Light_Engine", Point2D(0, 0)))
+    Group_lights.children["Light_Fuel"] = (Simple("Light_Fuel", Point2D(0, 0)))
     obj_array_grouped.append(Group_lights)
 
     Group_labels = Group(">Labels")
-    Group_labels.children["Speed"] = (Simple("Speed", Point2D(0, 0)))
-    Group_labels.children["Turbo"] = (Simple("Turbo", Point2D(0, 0)))
-    Group_labels.children["Temp"] = (Simple("Temp", Point2D(0, 0)))
-    Group_labels.children["Dist1"] = (Simple("Dist1", Point2D(0, 0)))
-    Group_labels.children["Dist2"] = (Simple("Dist2", Point2D(0, 0)))
-    Group_labels.children["Dist3"] = (Simple("Dist3", Point2D(0, 0)))
-    Group_labels.children["RPM"] = (Simple("RPM", Point2D(0, 0)))
-    Group_labels.children["X1000"] = (Simple("X1000", Point2D(0, 0)))
+    Group_labels.children["Label_Speed"] = (Simple("Label_Speed", Point2D(0, 0)))
+    Group_labels.children["Label_Turbo"] = (Simple("Label_Turbo", Point2D(0, 0)))
+    Group_labels.children["Label_Temp"] = (Simple("Label_Temp", Point2D(0, 0)))
+    Group_labels.children["Label_Distance"] = (Simple("Label_Distance", Point2D(0, 0)))
+    Group_labels.children["Label_KM1"] = (Simple("Label_KM1", Point2D(0, 0)))
+    Group_labels.children["Label_KM2"] = (Simple("Label_KM2", Point2D(0, 0)))
+    Group_labels.children["Label_RPM"] = (Simple("Label_RPM", Point2D(0, 0)))
+    Group_labels.children["Label_X1000"] = (Simple("Label_X1000", Point2D(0, 0)))
     obj_array_grouped.append(Group_labels)
 
     Group_labels_RPM = Group(">RPM labels(might be in reverse)")
     for i in range(RPM_COUNT, 0, -1):
-        Group_labels_RPM.children["RPM_LABEL_" + str(i)] = (Simple("RPM_LABEL_" + str(i), Point2D(0, 0)))
+        Group_labels_RPM.children["Label_RPM_N" + str(i)] = (Simple("Label_RPM_N" + str(i), Point2D(0, 0)))
     obj_array_grouped.append(Group_labels_RPM)
 
     Group_alphas = Group(">Alpha Values")
@@ -130,7 +130,7 @@ class RBR_DASH():
 
         # Rev
         for i in range(REVMETER_COUNT, 0, -1):
-            ordered.append([self.Group_REV.children["REV_" + str(i)], LineType.XY])
+            ordered.append([self.Group_REV.children["RPM_" + str(i)], LineType.XY])
 
         # Turbo X
         for i in range(TURBOMETER_COUNT, 0, -1):
@@ -142,32 +142,32 @@ class RBR_DASH():
 
         # Live values
         ordered.append([self.Group_numbers.children["Speedo"], LineType.XY])
-        ordered.append([self.Group_numbers.children["Dist1"], LineType.XY])
-        ordered.append([self.Group_numbers.children["Dist2"], LineType.XY])
+        ordered.append([self.Group_numbers.children["Distance1"], LineType.XY])
+        ordered.append([self.Group_numbers.children["Distance2"], LineType.XY])
         ordered.append(
             [self.Group_numbers.children["EngineTemp"], LineType.XY])
 
         # Engine Lights
-        ordered.append([self.Group_lights.children["LIGHT_1"], LineType.XY])
-        ordered.append([self.Group_lights.children["LIGHT_2"], LineType.XY])
-        ordered.append([self.Group_lights.children["LIGHT_3"], LineType.XY])
-        ordered.append([self.Group_lights.children["LIGHT_4"], LineType.XY])
-        ordered.append([self.Group_lights.children["LIGHT_5"], LineType.XY])
-        ordered.append([self.Group_lights.children["LIGHT_6"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Temp"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Brakes"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Oil"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Battery"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Engine"], LineType.XY])
+        ordered.append([self.Group_lights.children["Light_Fuel"], LineType.XY])
 
         # Labels
-        ordered.append([self.Group_labels.children["Speed"], LineType.XY])
-        ordered.append([self.Group_labels.children["Turbo"], LineType.XY])
-        ordered.append([self.Group_labels.children["Temp"], LineType.XY])
-        ordered.append([self.Group_labels.children["Dist1"], LineType.XY])
-        ordered.append([self.Group_labels.children["Dist2"], LineType.XY])
-        ordered.append([self.Group_labels.children["Dist3"], LineType.XY])
-        ordered.append([self.Group_labels.children["RPM"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_Speed"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_Turbo"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_Temp"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_Distance"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_KM1"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_KM2"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_RPM"], LineType.XY])
 
         # RPM labels
         for i in range(RPM_COUNT, 0, -1):
             ordered.append(
-                [self.Group_labels_RPM.children["RPM_LABEL_" + str(i)], LineType.XY])
+                [self.Group_labels_RPM.children["Label_RPM_N" + str(i)], LineType.XY])
 
         # Shift lights
         ordered.append([self.Group_shift_lights.children["SHIFT_1"], LineType.XY])
@@ -179,7 +179,7 @@ class RBR_DASH():
         ordered.append([self.Group_alphas.children["Unlit"], LineType.ALPHA])
         ordered.append([self.Group_alphas.children["Lit"], LineType.ALPHA])
 
-        ordered.append([self.Group_labels.children["X1000"], LineType.XY])
+        ordered.append([self.Group_labels.children["Label_X1000"], LineType.XY])
 
         return ordered
 

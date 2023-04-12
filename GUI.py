@@ -108,9 +108,7 @@ class GUI:
         return values
 
     def Build_layout(self):
-        menu_def = [['File', ['Open', 'Save', 'Exit', ]],
-                    ['Help', 'About...'], ]
-
+        menu_def = [['File', ['Open (Game dir)', 'Save As', 'Exit', ]]]
         controls_col = [
             [sg.Text('Background :'),
              sg.Slider((0.0, 1.0), key='-SLIDER-BACKGROUND-', orientation='h', resolution=0.01,
@@ -267,7 +265,7 @@ class GUI:
                     print(obj)
                 self.reload_coords(values)
 
-            elif event == 'Open':
+            elif event == 'Open (Game dir)':
                 folder = sg.popup_get_folder('file to open', no_window=True)
                 if not folder:
                     continue
@@ -278,7 +276,7 @@ class GUI:
                 self.window["-Value List-"].Update(self.Build_list())
                 print(folder)
 
-            elif event == 'Save':
+            elif event == 'Save As':
                 filename = sg.popup_get_file(
                     'file to save', no_window=True, save_as=True)
                 if not filename:
