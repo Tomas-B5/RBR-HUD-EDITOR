@@ -38,3 +38,6 @@ Visual RBR HUD(Digidash) editor. Made for Richard Burns Rally RallySimFans mod.
 # Useful links:
 - Bnk file editor(https://github.com/Tomas-B5/RBR-bnk-editor)
 - Template with a much better bank file already included(https://github.com/Tomas-B5/RBR-Digidash-modified-template)
+
+# Credits
+- [Mika-n](https://github.com/mika-n) - For a lot of info in regard to how digidashes work
